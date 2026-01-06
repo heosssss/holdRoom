@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.HoldRoom" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- ✅ 스플래시 전용 테마 -->
+    <style name="Theme.HoldRoom.Splash" parent="Theme.SplashScreen">
+        <!-- 스플래시 전체 배경색 -->
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+
+        <!-- 스플래시 가운데에 나오는 아이콘 (해파리) -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/jelly_splash</item>
+
+        <!-- 스플래시 이후에 사용할 진짜 앱 테마 -->
+        <item name="postSplashScreenTheme">@style/Theme.HoldRoom</item>
+    </style>
+</resources>
