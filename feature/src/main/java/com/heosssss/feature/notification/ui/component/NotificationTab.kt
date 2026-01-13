@@ -11,7 +11,7 @@ import com.heosssss.feature.notification.model.NotificationTab
 fun NotificationTab(
     selected: NotificationTab,
     onSelectedChange: (NotificationTab) -> Unit
-){
+) {
     val items = NotificationTab.values()
     val selectedIndex = items.indexOf(selected)
 
@@ -22,11 +22,8 @@ fun NotificationTab(
             Tab(
                 selected = index == selectedIndex,
                 onClick = { onSelectedChange(tab) },
-                text = {Text(text = tab.label)}
+                text = { Text(text = tab.label) }
             )
         }
     }
-
-
-
 }

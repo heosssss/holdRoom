@@ -4,13 +4,13 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp) // kapt 대신 ksp 사용 권장
+    alias(libs.plugins.hilt) // Hilt 플러그인 적용
 }
 
 android {
     namespace = "com.heosssss.holdroom"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.heosssss.holdroom"
@@ -67,6 +67,13 @@ dependencies {
 
     // Serialization (Route 등에 @Serializable 쓰면)
 //    implementation(libs.kotlinx.serialization.json)
+
+    // Hilt core
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler) // kapt 대신 ksp 사용 (toml에 맞게)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -1,16 +1,16 @@
 package com.heosssss.data.repository
 
 import com.heosssss.data.local.dao.NotificationDAO
-import com.heosssss.data.local.entity.NotificationSettingEntity
+import com.heosssss.data.mapper.toEntity
+import com.heosssss.domain.model.Notification
+import com.heosssss.domain.repository.NotificationRepository
+import javax.inject.Inject
 
-class NotificationRepository(
+class NotificationRepositoryImpl @Inject constructor(
     private  val dao: NotificationDAO
-) {
-    suspend fun save(notificationSetting: NotificationSettingEntity) {
-        dao.insertNotificationSetting(notificationSetting)
-    }
+) : NotificationRepository {
 
-    suspend fun loadAll(): List<NotificationSettingEntity> {
-        return dao.getAllNotificationSettings()
+    override suspend fun save(notificationSetting: Notification) {
+        dao.insertNotificationSetting(notificationSetting.toEntity())
     }
 }

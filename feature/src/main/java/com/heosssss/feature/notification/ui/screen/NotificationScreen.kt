@@ -4,21 +4,21 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.heosssss.core_ui.component.AddFloatingButton
 import com.heosssss.core_ui.component.AppScreenScaffold
 import com.heosssss.feature.notification.model.NotificationTab
+import com.heosssss.feature.notification.ui.component.NotificationTab
+import com.heosssss.feature.notification.viewmodel.NotificationViewModel
 
 @Composable
 fun NotificationScreen(
     onNavigateToAddTimeRule: () -> Unit,
-    onNavigateToAddPlaceRule: () -> Unit
+    onNavigateToAddPlaceRule: () -> Unit,
+    viewModel: NotificationViewModel = hiltViewModel()
 ){
-    var selectedTab by remember { mutableStateOf(NotificationTab.Time) }
+    val selectedTab = viewModel.selectedTab
 
     AppScreenScaffold(
         title = "알림",
@@ -38,10 +38,12 @@ fun NotificationScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ){
-            com.heosssss.feature.notification.ui.component.NotificationTab(
+            NotificationTab(
                 selected = selectedTab,
-                onSelectedChange = { selectedTab = it }
+                onSelectedChange = { viewModel.onTabChanged(it) }
             )
+            // 탭 전환은 네비게이션 보다는 상태관리로 처리함.
+            // 이유 : 사용자가 탭을 옮겨가며 작업했을때 remember를 쓰면 탭이 초기화 될 수 있음
             when (selectedTab) {
                 NotificationTab.Time -> TimeNotificationContent()
                 NotificationTab.Place -> PlaceNotificationContent()

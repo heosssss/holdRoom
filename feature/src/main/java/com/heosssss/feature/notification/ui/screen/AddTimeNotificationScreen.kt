@@ -1,5 +1,8 @@
 package com.heosssss.feature.notification.ui.screen
 
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -31,31 +34,37 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.heosssss.core_ui.component.AppToggleRow
 import com.heosssss.core_ui.component.BottomActionButton
 import com.heosssss.core_ui.component.DayChip
 import com.heosssss.core_ui.component.RepeatChip
 import com.heosssss.core_ui.component.TimeField
 import com.heosssss.core_ui.component.TimePickerDialog
+import com.heosssss.domain.model.Time
 import com.heosssss.feature.notification.model.RepeatMode
+import com.heosssss.feature.notification.viewmodel.AddTimeNotificationViewModel
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 private val hmFormatter = DateTimeFormatter.ofPattern("HH:mm")
+@RequiresApi(Build.VERSION_CODES.O)
 private fun LocalTime.toHmString(): String = format(hmFormatter)
 
+@SuppressLint("DefaultLocale")
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTimeNotification(
     onBackClick: () -> Unit = {},
     onSavedClick: () -> Unit = {},
+    viewModel: AddTimeNotificationViewModel = hiltViewModel() //뷰 모델 주입
 ) {
-    var timeName by remember { mutableStateOf("") }
-    var startTime by remember { mutableStateOf(LocalTime.of(9,0)) }
-    var endTime by remember { mutableStateOf(LocalTime.of(18,0)) }
 
     //다이얼로그 표시 여부
     var showStartPicker by remember { mutableStateOf(false) }
@@ -80,11 +89,11 @@ fun AddTimeNotification(
     //시작 시간 다이얼로그
     if(showStartPicker){
         TimePickerDialog(
-            initialHour = startTime.hour,
-            initialMinute = startTime.minute,
+            initialHour = viewModel.startTime.hour,
+            initialMinute = viewModel.startTime.minute,
             onDismiss = { showStartPicker = false },
             onConfirm = { hour, minute ->
-                startTime = LocalTime.of(hour, minute)
+                viewModel.onStartTimeChanged(Time(hour, minute))
                 showStartPicker = false
             }
         )
@@ -93,11 +102,11 @@ fun AddTimeNotification(
     //종료 시간 다이얼로그
     if(showEndPicker){
         TimePickerDialog(
-            initialHour = endTime.hour,
-            initialMinute = endTime.minute,
+            initialHour = viewModel.endTime.hour,
+            initialMinute = viewModel.endTime.minute,
             onDismiss = { showEndPicker = false },
             onConfirm = { hour, minute ->
-                endTime = LocalTime.of(hour, minute)
+                viewModel.onEndTimeChanged(Time(hour, minute))
                 showEndPicker = false
             }
         )
@@ -116,18 +125,16 @@ fun AddTimeNotification(
                         )
                     }
                 },
-//                windowInsets = WindowInsets(0.dp)
             )
         },
         bottomBar = {
             BottomActionButton(
                 text = "이렇게 할래요",
-                onClick = {/*todo*/},
+                onClick = { viewModel.saveNotificaion() },
                 containerColor = Color(0xFF9B8CFF),
                 contentColor = Color.White
             )
         },
-//        contentWindowInsets = WindowInsets(0.dp)
     ){ innerPadding ->
         Column(
             modifier = Modifier
@@ -150,8 +157,8 @@ fun AddTimeNotification(
             )
             Spacer(Modifier.height(8.dp))
             OutlinedTextField(
-                value = timeName,
-                onValueChange = { timeName = it },
+                value = viewModel.timeName,
+                onValueChange = {viewModel.onTimeNameChanged(it)},
                 modifier = Modifier
                     .fillMaxSize()
                     .height(52.dp),
@@ -178,7 +185,7 @@ fun AddTimeNotification(
             )
             Spacer(Modifier.height(6.dp))
             TimeField(
-                time = startTime.toHmString(),
+                time = String.format("%02d:%02d", viewModel.startTime.hour, viewModel.startTime.minute),
                 onClick = { showStartPicker = true }
             )
             Spacer(Modifier.height(16.dp))
@@ -189,7 +196,7 @@ fun AddTimeNotification(
             )
             Spacer(Modifier.height(6.dp))
             TimeField(
-                time = endTime.toHmString(),
+                time = String.format("%02d:%02d", viewModel.endTime.hour, viewModel.startTime.minute),
                 onClick = { showEndPicker = true }
             )
             Spacer(Modifier.height(24.dp))

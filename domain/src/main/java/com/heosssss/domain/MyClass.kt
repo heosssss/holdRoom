@@ -1,4 +1,4 @@
-package com.heosssss.holdroom
+package com.heosssss.domain
 
 class MyClass {
 }

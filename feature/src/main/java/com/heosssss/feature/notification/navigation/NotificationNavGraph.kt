@@ -1,5 +1,7 @@
 package com.heosssss.feature.notification.navigation
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -9,44 +11,39 @@ import com.heosssss.feature.notification.ui.screen.NotificationScreen
 import com.heosssss.feature.notification.ui.screen.SelectPlaceScreen
 
 
-// 상세 화면 route 상수는 feature 안에서만 알고 있게 둘게
-const val NOTIFICATION_ADD_TIME_ROUTE = "notification/add/time"
-const val NOTIFICATION_ADD_PLACE_ROUTE = "notification/add/place"
-const val NOTIFICATION_SELECT_PLACE_ROUTE = "notification/select/place"
-
+@RequiresApi(Build.VERSION_CODES.O)
 fun NavGraphBuilder.notificationNavGraph(
         navController: NavController,
-        mainRoute: String,
     ){
-        composable(route = mainRoute) {
+        composable<NotificationMain> {
             NotificationScreen(
-                onNavigateToAddTimeRule = {
-                    navController.navigate(NOTIFICATION_ADD_TIME_ROUTE)
-                },
-                onNavigateToAddPlaceRule = {
-                    navController.navigate(NOTIFICATION_ADD_PLACE_ROUTE)
-                }
+                onNavigateToAddTimeRule = { navController.navigate(AddTimeNotification)},
+                onNavigateToAddPlaceRule = { navController.navigate(AddPlaceNotification)}
             )
         }
 
-        composable(route = NOTIFICATION_ADD_TIME_ROUTE) {
+        composable<AddTimeNotification> {
             AddTimeNotification(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        composable(route = NOTIFICATION_ADD_PLACE_ROUTE) {
+        composable<AddPlaceNotification> {
             AddPlaceNotification(
                 onBackClick = { navController.popBackStack() },
                 onClickSelectOnMap = {
-                    navController.navigate(NOTIFICATION_SELECT_PLACE_ROUTE)
+                    navController.navigate(SelectPlace())
                 }
             )
         }
-        composable(route = NOTIFICATION_SELECT_PLACE_ROUTE) {
+        composable<SelectPlace> {
             SelectPlaceScreen(
                 onBackClick = { navController.popBackStack() },
                 onConfirmClick = { address ->
                     //todo. AddPlaceNotification으로 선택된 주소 전달!
+//                    navController.previousBackStackEntry
+//                        ?.savedStateHandle
+//                        ?.set("address_key", address)
+//                    navController.popBackStack()
                 }
             )
         }

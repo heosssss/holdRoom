@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import com.heosssss.feature.focus.model.FocusUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class FocusViewModel : ViewModel(){
     private val _uiState = MutableStateFlow( // MutableStateFlow : 데이터 수정이 가능함. 내부 수정용

@@ -7,8 +7,7 @@ import com.heosssss.feature.record.ui.screen.RecordScreen
 import com.heosssss.feature.record.viewmodel.RecordViewModel
 
 fun NavGraphBuilder.recordNavGraph() {
-    composable("record") {
-        val viewModel = remember { RecordViewModel() }
-        RecordScreen(viewModel = viewModel)
+    composable<RecourdMain> {
+        RecordScreen()
     }
 }

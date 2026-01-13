@@ -1,4 +1,16 @@
 package com.heosssss.data.local.db
 
-class AppDatabase {
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import com.heosssss.data.local.dao.NotificationDAO
+import com.heosssss.data.local.entity.NotificationSettingEntity
+
+
+@Database(
+    entities = [NotificationSettingEntity::class],
+    version = 1
+)
+abstract class AppDatabase : RoomDatabase(){
+
+    abstract fun notificationSettingDao(): NotificationDAO
 }

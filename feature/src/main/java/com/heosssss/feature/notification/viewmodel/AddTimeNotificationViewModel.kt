@@ -10,12 +10,17 @@ import com.heosssss.domain.model.Notification
 import com.heosssss.domain.model.RepeatType
 import com.heosssss.domain.model.Time
 import com.heosssss.domain.usecase.SaveNotificationUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NotificationViewModel(
+@HiltViewModel
+class AddTimeNotificationViewModel @Inject constructor(
     private val saveNotificationUseCase: SaveNotificationUseCase
 ) : ViewModel() {
     // UI 상태
+    var timeName by mutableStateOf("")
+        private set
     var startTime by mutableStateOf(Time(9, 0))
         private set
 
@@ -34,6 +39,9 @@ class NotificationViewModel(
 
 
     // UI 이벤트 처리 함수
+    fun onTimeNameChanged(newName: String) {
+        timeName = newName
+    }
     fun onStartTimeChanged(time: Time) {
         startTime = time
     }
@@ -58,6 +66,7 @@ class NotificationViewModel(
         viewModelScope.launch {
             saveNotificationUseCase(
                 Notification(
+                    timeName = timeName,
                     startTime = startTime,
                     endTime = endTime,
                     blockedApps = blockedApps,

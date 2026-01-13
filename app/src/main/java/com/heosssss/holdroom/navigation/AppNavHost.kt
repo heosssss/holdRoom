@@ -21,14 +21,10 @@ fun AppNavHost(
     ){
 
         // 집중 네비게이션
-        focusNavGraph(
-            mainRoute = Screen.Focus.route
-        )
+        focusNavGraph()
 
         // 알림 네비게이션
-        notificationNavGraph(
-            navController = navController,
-            mainRoute = Screen.Notification.route)
+        notificationNavGraph(navController)
 
         // 기록 네비게이션
         recordNavGraph()

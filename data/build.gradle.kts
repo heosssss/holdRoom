@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.ksp) // kapt 대신 ksp 사용 권장
+    alias(libs.plugins.hilt) // Hilt 플러그인 적용
 }
 
 android {
@@ -36,6 +37,8 @@ kotlin{
 }
 
 dependencies {
+    implementation(project(":domain"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -44,6 +47,11 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
+
+    //Hilt
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler) // kapt 대신 ksp 사용 (toml에 맞게)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // 직렬화 (API/로컬 변환에 @Serializable 쓸 거면)
 //    implementation(libs.kotlinx.serialization.json)

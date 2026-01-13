@@ -12,16 +12,16 @@ import com.heosssss.feature.profile.ui.settings.ProfileSettingsScreen
 fun NavGraphBuilder.profileNavGraph(
     navController: NavController
 ) {
-    composable(ProfileRoutes.ROOT) {
+    composable<ProfileMain> {
         ProfileScreen(
             onHeaderClick = {
-                navController.navigate(ProfileRoutes.EDIT_PROFILE)
+                navController.navigate(ProfileEdit)
             },
             onMenuClick = { menu ->
                 when (menu.id) {
-                    ProfileMenuId.SETTINGS -> navController.navigate(ProfileRoutes.SETTINGS)
-                    ProfileMenuId.EDIT_PROFILE -> navController.navigate(ProfileRoutes.EDIT_PROFILE)
-                    ProfileMenuId.ANNOUNCEMENTS -> navController.navigate(ProfileRoutes.ANNOUNCEMENTS)
+                    ProfileMenuId.SETTINGS -> navController.navigate(ProfileSettings)
+                    ProfileMenuId.EDIT_PROFILE -> navController.navigate(ProfileEdit)
+                    ProfileMenuId.ANNOUNCEMENTS -> navController.navigate(ProfileAnnouncements)
 //                    ProfileMenuId.FRIENDS -> navController.navigate(ProfileRoutes.FRIENDS)
                 }
             },
@@ -33,15 +33,15 @@ fun NavGraphBuilder.profileNavGraph(
             }
         )
     }
-    composable(ProfileRoutes.SETTINGS) {
+    composable<ProfileSettings> {
         ProfileSettingsScreen(navController)
     }
 
-    composable(ProfileRoutes.EDIT_PROFILE) {
+    composable<ProfileEdit>{
         EditProfileScreen(navController)
     }
 
-    composable(ProfileRoutes.ANNOUNCEMENTS) {
+    composable<ProfileAnnouncements> {
         AnnouncementScreen(navController)
     }
 //

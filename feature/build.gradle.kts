@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
+    alias(libs.plugins.ksp) // kapt 대신 ksp 사용 권장
 }
 
 android {
@@ -42,6 +43,7 @@ kotlin{
 
 dependencies {
     implementation(project(":core-ui"))
+    implementation(project(":domain"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose.libraries)
@@ -58,4 +60,8 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.compiler) // kapt 대신 ksp 사용 (toml에 맞게)
+    implementation(libs.androidx.hilt.navigation.compose)
 }

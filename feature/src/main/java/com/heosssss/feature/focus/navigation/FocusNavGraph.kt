@@ -5,9 +5,8 @@ import androidx.navigation.compose.composable
 import com.heosssss.feature.focus.ui.screen.FocusScreen
 
 fun NavGraphBuilder.focusNavGraph(
-    mainRoute: String
 ) {
-    composable(mainRoute) {
+    composable<FocusMain> {
         FocusScreen()
     }
 }

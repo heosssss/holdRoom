@@ -26,7 +26,6 @@ fun BottomActionButton(
                     .height(52.dp),
                 shape = RoundedCornerShape(14.dp),
                 colors = ButtonDefaults.buttonColors(
-                    //todo. 색깔 받아봐야함
                     containerColor = containerColor,
                     contentColor = contentColor),
                 elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)

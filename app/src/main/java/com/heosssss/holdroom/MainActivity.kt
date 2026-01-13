@@ -13,7 +13,9 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.heosssss.core_ui.theme.HoldRoomTheme
 import com.heosssss.holdroom.ui.AppRootScreen
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() { // 앱이 실행될 때 맨 처음 실행되는 화면/Jetpack Compose를 쓰기 좋은 Activity 클래스 상속받음
     override fun onCreate(savedInstanceState: Bundle?) { // 상속받은 onCreate 재정의 / savedInstanceState : 저장해둔 상태가 들어옴
         installSplashScreen() // 스플래시
