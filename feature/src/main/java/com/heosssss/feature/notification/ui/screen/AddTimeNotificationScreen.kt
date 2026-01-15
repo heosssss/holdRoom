@@ -11,9 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -25,36 +24,26 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.heosssss.core_ui.component.AppToggleRow
 import com.heosssss.core_ui.component.BottomActionButton
 import com.heosssss.core_ui.component.DayChip
 import com.heosssss.core_ui.component.RepeatChip
 import com.heosssss.core_ui.component.TimeField
 import com.heosssss.core_ui.component.TimePickerDialog
+import com.heosssss.domain.model.RepeatType
 import com.heosssss.domain.model.Time
-import com.heosssss.feature.notification.model.RepeatMode
+import com.heosssss.feature.notification.model.AppInfoUiModel
+import com.heosssss.feature.notification.ui.component.AppList
+import com.heosssss.feature.notification.ui.component.AppSearchBar
 import com.heosssss.feature.notification.viewmodel.AddTimeNotificationViewModel
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-
-
-
-
-@RequiresApi(Build.VERSION_CODES.O)
-private val hmFormatter = DateTimeFormatter.ofPattern("HH:mm")
-@RequiresApi(Build.VERSION_CODES.O)
-private fun LocalTime.toHmString(): String = format(hmFormatter)
+import com.heosssss.feature.notification.viewmodel.AppListViewModel
 
 @SuppressLint("DefaultLocale")
 @RequiresApi(Build.VERSION_CODES.O)
@@ -62,57 +51,38 @@ private fun LocalTime.toHmString(): String = format(hmFormatter)
 @Composable
 fun AddTimeNotification(
     onBackClick: () -> Unit = {},
-    onSavedClick: () -> Unit = {},
-    viewModel: AddTimeNotificationViewModel = hiltViewModel() //뷰 모델 주입
-) {
+    viewModel: AddTimeNotificationViewModel = hiltViewModel(),
+    appListViewModel: AppListViewModel = hiltViewModel()
+    ) {
 
-    //다이얼로그 표시 여부
-    var showStartPicker by remember { mutableStateOf(false) }
-    var showEndPicker by remember { mutableStateOf(false) }
-
-    // 앱 리스트 상태
-    //todo. 현재는 임시로 그려둔 상태임. 추후 실제 앱 리스트 갖고오면 변경 필요
-    var isInstagramEnabled by remember { mutableStateOf(true) }
-    var isFacebookEnabled by remember { mutableStateOf(true) }
-    var isYoutubeEnabled by remember { mutableStateOf(false) }
-    var isTwitterEnabled by remember { mutableStateOf(false) }
-    var isTiktokEnabled by remember { mutableStateOf(true) }
-
-    //반복 옵션 상태
-    var repeatMode by remember { mutableStateOf(RepeatMode.Everyday) }
-    var selectedDays by remember {
-        mutableStateOf(
-            mutableSetOf("월", "화", "수", "목", "금", "토", "일")
-        )
-    }
+    //ViewModel들로부터 상태 수집
+    val uiState by viewModel.uiState.collectAsState()
+    val appListUiState by appListViewModel.uiState.collectAsState()
 
     //시작 시간 다이얼로그
-    if(showStartPicker){
+    if (uiState.showStartPicker) {
         TimePickerDialog(
-            initialHour = viewModel.startTime.hour,
-            initialMinute = viewModel.startTime.minute,
-            onDismiss = { showStartPicker = false },
-            onConfirm = { hour, minute ->
-                viewModel.onStartTimeChanged(Time(hour, minute))
-                showStartPicker = false
+            initialHour = uiState.startTime.hour,
+            initialMinute = uiState.startTime.minute,
+            onDismiss = { viewModel.onShowStartPicker(false) },
+            onConfirm = { h, m ->
+                viewModel.onStartTimeChanged(Time(h, m))
+                viewModel.onShowStartPicker(false)
             }
         )
     }
-
     //종료 시간 다이얼로그
-    if(showEndPicker){
+    if (uiState.showEndPicker) {
         TimePickerDialog(
-            initialHour = viewModel.endTime.hour,
-            initialMinute = viewModel.endTime.minute,
-            onDismiss = { showEndPicker = false },
-            onConfirm = { hour, minute ->
-                viewModel.onEndTimeChanged(Time(hour, minute))
-                showEndPicker = false
+            initialHour = uiState.endTime.hour,
+            initialMinute = uiState.endTime.minute,
+            onDismiss = { viewModel.onShowEndPicker(false) },
+            onConfirm = { h, m ->
+                viewModel.onEndTimeChanged(Time(h, m))
+                viewModel.onShowEndPicker(false)
             }
         )
     }
-
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -135,194 +105,184 @@ fun AddTimeNotification(
                 contentColor = Color.White
             )
         },
-    ){ innerPadding ->
-        Column(
+    ) { innerPadding ->
+        LazyColumn(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .padding(horizontal = 20.dp, vertical = 8.dp)
         ) {
-            Text(
-                text = "무슨 시간이에요?",
-                style = MaterialTheme.typography.headlineSmall.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
-            Text(
-                text = "시간 이름",
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.Gray
-            )
-            Spacer(Modifier.height(8.dp))
-            OutlinedTextField(
-                value = viewModel.timeName,
-                onValueChange = {viewModel.onTimeNameChanged(it)},
-                modifier = Modifier
-                    .fillMaxSize()
-                    .height(52.dp),
-                placeholder = {
-                    Text(text ="예: 아침 집중, 자기 전에")
-                },
-                singleLine = true,
-                shape = RoundedCornerShape(16.dp)
-            )
-            Spacer(Modifier.height(24.dp))
-
-            //시간 설정
-            Text(
-                text = "시간 설정",
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.Gray
-            )
-            Spacer(Modifier.height(12.dp))
-
-            Text(
-                text = "시작 시간",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray
-            )
-            Spacer(Modifier.height(6.dp))
-            TimeField(
-                time = String.format("%02d:%02d", viewModel.startTime.hour, viewModel.startTime.minute),
-                onClick = { showStartPicker = true }
-            )
-            Spacer(Modifier.height(16.dp))
-            Text(
-                text = "종료 시간",
-                style = MaterialTheme.typography.labelSmall,
-                color = Color.Gray
-            )
-            Spacer(Modifier.height(6.dp))
-            TimeField(
-                time = String.format("%02d:%02d", viewModel.endTime.hour, viewModel.startTime.minute),
-                onClick = { showEndPicker = true }
-            )
-            Spacer(Modifier.height(24.dp))
-
-
-
-            // 차단할 앱 목록
-            //todo 차단할 앱 목록을 어떻게 갖고 오나요 ~
-            Text(
-                text = "집중을 도와드릴게요.",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.SemiBold
-                )
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "어떤 앱들은 이 시간동안 집중을 방해할 수 있어요.",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF8E8E93),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(Modifier.height(12.dp))
-            AppToggleRow(
-                name = "Instagram",
-                gradientColors = listOf(Color(0xFFFF9A9E), Color(0xFFFAD0C4)),
-                enabled = isInstagramEnabled,
-                onEnabledChange = { isInstagramEnabled = it }
-            )
-            AppToggleRow(
-                name = "Facebook",
-                gradientColors = listOf(Color(0xFF4C6FFF), Color(0xFF89A7FF)),
-                enabled = isFacebookEnabled,
-                onEnabledChange = { isFacebookEnabled = it }
-            )
-            AppToggleRow(
-                name = "YouTube",
-                solidColor = Color(0xFFFF5252),
-                enabled = isYoutubeEnabled,
-                onEnabledChange = { isYoutubeEnabled = it }
-            )
-            AppToggleRow(
-                name = "Twitter",
-                solidColor = Color(0xFF1DA1F2),
-                enabled = isTwitterEnabled,
-                onEnabledChange = { isTwitterEnabled = it }
-            )
-            AppToggleRow(
-                name = "TikTok",
-                gradientColors = listOf(Color(0xFFFFA726), Color(0xFFFFCC80)),
-                enabled = isTiktokEnabled,
-                onEnabledChange = { isTiktokEnabled = it }
-            )
-
-            //todo. 여기까지 임시로 앱 리스트 그려준 것임. 추후 변경 필요
-
-
-
-            Spacer(Modifier.height(24.dp))
-
-            //반복 여부
-            Text(
-                text = "반복할까요?",
-                style = MaterialTheme.typography.labelMedium,
-                color = Color.Gray
-            )
-            Spacer(Modifier.height(12.dp))
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                RepeatChip(
-                    text = "주중",
-                    selected = repeatMode == RepeatMode.Weekdays,
-                    onClick = {
-                        repeatMode = RepeatMode.Weekdays
-                        selectedDays = mutableSetOf("월", "화", "수", "목", "금")
-                    }
-                )
-                RepeatChip(
-                    text = "주말",
-                    selected = repeatMode == RepeatMode.Weekend,
-                    onClick = {
-                        repeatMode = RepeatMode.Weekend
-                        selectedDays = mutableSetOf("토", "일")
-                    }
-                )
-                RepeatChip(
-                    text = "매일",
-                    selected = repeatMode == RepeatMode.Everyday,
-                    onClick = {
-                        repeatMode = RepeatMode.Everyday
-                        selectedDays = mutableSetOf("월", "화", "수", "목", "금", "토", "일")
-                    }
+            item {
+                NameSection(
+                    title = uiState.title,
+                    onNameChange = viewModel::onTitleChanged
                 )
             }
-
-                Spacer(Modifier.height(16.dp))
-
-                val days = listOf("월", "화", "수", "목", "금", "토", "일")
-
-                Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    days.forEach { day ->
-                        DayChip(
-                            text = day,
-                            selected = selectedDays.contains(day),
-                            onClick = {
-                                val newSet = selectedDays.toMutableSet()
-                                if(newSet.contains(day)) newSet.remove(day) else newSet.add(day)
-                                selectedDays = newSet
-
-                                repeatMode = RepeatMode.Custom
-                            }
-                        )
-                    }
-                }
-
-                Spacer(Modifier.height(80.dp))
+            item {
+                TimeSettingSection(
+                    startTime = uiState.startTime,
+                    endTime = uiState.endTime,
+                    onStartClick = { viewModel.onShowStartPicker(true) },
+                    onEndClick = { viewModel.onShowEndPicker(true) }
+                )
             }
-
+            item {
+                AppSelectionSection(
+                    query = appListUiState.searchQuery,
+                    apps = appListUiState.apps,
+                    selectedApps = appListUiState.selectedApps,
+                    onQueryChange = appListViewModel::onSearchQueryChange,
+                    onAppToggle = appListViewModel::toggleApp
+                )
+            }
+            item {
+                RepeatSelectionSection(
+                    repeatMode = uiState.repeatType,
+                    selectedDays = uiState.selectedDaysString, // 요일 처리는 ViewModel에서!
+                    onModeClick = { mode, days -> viewModel.onRepeatModeChanged(mode) },
+                    onDayClick = { day -> viewModel.onDaySelected(day) }
+                )
+            }
         }
-
     }
+}
 
+
+// 상단 타이틀 & 이름 입력 섹션
+@Composable
+private fun NameSection(
+    title: String,
+    onNameChange: (String) -> Unit
+) {
+    Column {
+        Text(
+            text = "무슨 시간이에요?",
+            style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
+            modifier = Modifier.padding(bottom = 24.dp)
+        )
+        Text(text = "시간 이름", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+        Spacer(Modifier.height(8.dp))
+        OutlinedTextField(
+            value = title,
+            onValueChange = onNameChange,
+            modifier = Modifier.fillMaxWidth().height(52.dp),
+            placeholder = { Text(text = "예: 아침 집중, 자기 전에") },
+            singleLine = true,
+            shape = RoundedCornerShape(16.dp)
+        )
+        Spacer(Modifier.height(24.dp))
+    }
+}
+
+// 시간 설정 섹션 (시작/종료 시간)
+@Composable
+private fun TimeSettingSection(
+    startTime: Time,
+    endTime: Time,
+    onStartClick: () -> Unit,
+    onEndClick: () -> Unit
+) {
+    Column {
+        Text(text = "시간 설정", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+        Spacer(Modifier.height(12.dp))
+        Text(text = "시작 시간", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+        Spacer(Modifier.height(6.dp))
+        TimeField(
+            time = startTime.toDisplayString(),
+            onClick = onStartClick
+        )
+        Spacer(Modifier.height(16.dp))
+        Text(text = "종료 시간", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+        Spacer(Modifier.height(6.dp))
+        TimeField(
+            time = endTime.toDisplayString(),
+            onClick = onEndClick
+        )
+        Spacer(Modifier.height(24.dp))
+    }
+}
+
+@Composable
+private fun AppSelectionSection(
+    query: String,
+    apps: List<AppInfoUiModel>, // AppListViewModel에서 가져온 데이터
+    selectedApps: Set<String>,
+    onQueryChange: (String) -> Unit,
+    onAppToggle: (String) -> Unit
+) {
+    Column {
+        Text(
+            text = "집중을 도와드릴게요.",
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
+        )
+        Spacer(Modifier.height(4.dp))
+        Text(
+            text = "어떤 앱들은 집중을 방해할 수 있어요.",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF8E8E93),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(Modifier.height(12.dp))
+        AppSearchBar(
+            query = query,
+            onQueryChange = onQueryChange
+        )
+        AppList(
+            installedApps = apps,
+            selectedApps = selectedApps,
+            onAppToggle = onAppToggle
+        )
+        Spacer(Modifier.height(24.dp))
+    }
+}
+
+@Composable
+private fun RepeatSelectionSection(
+    repeatMode: RepeatType,
+    selectedDays: Set<String>,
+    onModeClick: (RepeatType, Set<String>) -> Unit,
+    onDayClick: (String) -> Unit
+) {
+    Column {
+        Text(text = "반복할까요?", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+        Spacer(Modifier.height(12.dp))
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            RepeatChip(
+                text = "주중",
+                selected = repeatMode == RepeatType.WEEKLY,
+                onClick = { onModeClick(RepeatType.WEEKLY, setOf("월", "화", "수", "목", "금")) }
+            )
+            RepeatChip(
+                text = "주말",
+                selected = repeatMode == RepeatType.WEEkEND,
+                onClick = { onModeClick(RepeatType.WEEkEND, setOf("토", "일")) }
+            )
+            RepeatChip(
+                text = "매일",
+                selected = repeatMode == RepeatType.DAILY, // RepeatType에 DAILY가 있다고 가정
+                onClick = { onModeClick(RepeatType.DAILY, setOf("월", "화", "수", "목", "금", "토", "일")) }
+            )
+        }
+        Spacer(Modifier.height(16.dp))
+        val days = listOf("월", "화", "수", "목", "금", "토", "일")
+        Row(
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            days.forEach { day ->
+                DayChip(
+                    text = day,
+                    selected = selectedDays.contains(day),
+                    onClick = { onDayClick(day) }
+                )
+            }
+        }
+        Spacer(Modifier.height(80.dp))
+    }
+}
 
 

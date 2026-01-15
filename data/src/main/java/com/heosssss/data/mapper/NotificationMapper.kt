@@ -7,7 +7,7 @@ import com.heosssss.domain.model.Notification
 fun Notification.toEntity() : NotificationSettingEntity =
     NotificationSettingEntity(
         id = id,
-        timeName = timeName,
+        title = title,
         startHour = startTime.hour,
         startMinute = startTime.minute,
         endHour = endTime.hour,
@@ -17,5 +17,5 @@ fun Notification.toEntity() : NotificationSettingEntity =
         repeatType = repeatType.name,
         days = days.joinToString("|") {it.name},
 
-        enabled = enabled,
+        isActive = isActive,
     )

@@ -1,90 +1,136 @@
 [versions]
+# Android & Kotlin 기초 설정
 agp = "8.8.0"
-kotlin = "2.0.21"
+kotlin = "2.1.0"
+ksp = "2.1.0-1.0.29"
+jetbrainsKotlinJvm = "2.0.21"
+
+# AndroidX 핵심 라이브러리
 coreKtx = "1.15.0"
-junit = "4.13.2"
-junitVersion = "1.3.0"
-espressoCore = "3.7.0"
-lifecycleRuntimeKtx = "2.8.7"
-activityCompose = "1.9.3"
-composeBom = "2025.12.00"
-lifecycleViewmodelCompose = "2.10.0"
 appcompat = "1.7.1"
+activityCompose = "1.9.3"
+lifecycleRuntimeKtx = "2.8.7"
+
+# Compose & UI
+composeBom = "2025.12.00"
+ui = "1.10.0" # (BOM을 사용한다면 사실 개별 버전은 생략 가능합니다)
+foundation = "1.10.0"
 material = "1.13.0"
+coil = "2.5.0"
+
+# Jetpack Navigation & ViewModel
 navigationCompose = "2.8.5"
+navigationRuntimeKtx = "2.9.6"
+lifecycleViewmodelCompose = "2.10.0"
+
+# 데이터 처리 & 비동기 (Room, Coroutines, Serialization)
+room = "2.6.1"
+kotlinxCoroutinesCore = "1.10.2"
 kotlinxSerializationJson = "1.9.0"
 
-ksp = "2.0.21-1.0.26"
-kotlinxCoroutinesCore = "1.10.2"
-jetbrainsKotlinJvm = "2.0.21"
-navigationRuntimeKtx = "2.9.6"
-ui = "1.10.0"
-foundation = "1.10.0"
-
-room = "2.6.1"
-
+# Dependency Injection (Hilt)
 hilt = "2.52"
 hiltNavigationCompose = "1.2.0"
 
+# 테스트 (Unit & UI Test)
+junit = "4.13.2"
+junitVersion = "1.3.0"
+espressoCore = "3.7.0"
+
+
 [libraries]
+# AndroidX 핵심 & 기초 (Core, Appcompat)
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
-androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
-androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+# Compose UI (BOM 기반 관리)
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
 androidx-compose-ui = { group = "androidx.compose.ui", name = "ui" }
 androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
 androidx-compose-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
-androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
-androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-material-icons = { module = "androidx.compose.material:material-icons-extended" }
+androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
 
-androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+# Jetpack Components (Lifecycle, Navigation, Activity)
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-lifecycle-viewmodel-compose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "lifecycleViewmodelCompose" }
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
-
-kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
 androidx-navigation-runtime-ktx = { group = "androidx.navigation", name = "navigation-runtime-ktx", version.ref = "navigationRuntimeKtx" }
-androidx-ui = { group = "androidx.compose.ui", name = "ui", version.ref = "ui" }
-androidx-compose-foundation = { group = "androidx.compose.foundation", name = "foundation", version.ref = "foundation" }
 
-androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
-androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
-androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
-
+# Dependency Injection (Hilt)
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
 hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationCompose" }
 
+# 데이터 & 비동기 (Room, Coroutines, Serialization)
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutinesCore" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+
+# 이미지 로딩 (Coil)
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+
+# 테스트 (Unit & UI Test)
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 
 [plugins]
+# Android & Kotlin 기본 플러그인
 android-application = { id = "com.android.application", version.ref = "agp" }
-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
-kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
-kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin"}
-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
 
+# Compose & 컴파일러 관련
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+
+# Kotlin 확장 기능 (Serialization, Parcelize)
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlin-parcelize = { id = "org.jetbrains.kotlin.plugin.parcelize", version.ref = "kotlin" }
+
+# 의존성 주입 (Hilt)
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt" }
 
 
 [bundles]
+# 컴포즈 개발 시 필수로 들어가는 라이브러리 묶음
 compose-libraries = [
     "androidx-activity-compose",
-    "androidx-compose-ui", "androidx-compose-ui-graphics",
-    "androidx-compose-ui-tooling",
-    "material",
+    "androidx-compose-ui",
+    "androidx-compose-ui-graphics",
     "androidx-compose-ui-tooling-preview",
     "androidx-compose-material3",
+    "androidx-compose-material-icons",
+    "androidx-compose-foundation",
     "androidx-lifecycle-viewmodel-compose",
-    "androidx-navigation-compose",
-    "androidx-compose-material-icons"
+    "androidx-navigation-compose"
+]
+
+# Room 데이터베이스 관련 묶음
+room-libraries = [
+    "androidx-room-runtime",
+    "androidx-room-ktx"
+]
+
+# 단위 테스트 관련 묶음
+test-libraries = [
+    "junit"
+]
+
+# UI 테스트 관련 묶음
+android-test-libraries = [
+    "androidx-junit",
+    "androidx-espresso-core",
+    "androidx-compose-ui-test-junit4"
 ]

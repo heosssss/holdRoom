@@ -34,10 +34,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import com.heosssss.core_ui.component.AppToggleRow
 import com.heosssss.core_ui.component.BottomActionButton
+import com.heosssss.feature.notification.ui.component.AppList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,15 +49,6 @@ fun AddPlaceNotification(
             ) -> Unit = {_, _ ->},
 ){
     var placeName by remember { mutableStateOf("") }
-
-    //todo. 임시 상태
-    var instagram by remember { mutableStateOf(true) }
-    var twitter by remember { mutableStateOf(false) }
-    var youtube by remember { mutableStateOf(true) }
-    var facebook by remember { mutableStateOf(false) }
-    var spotify by remember { mutableStateOf(false) }
-    var game by remember { mutableStateOf(true) }
-
     Scaffold(
         topBar = {
             TopAppBar(
@@ -165,76 +155,9 @@ fun AddPlaceNotification(
                     )
                 }
             }
-
             Spacer(Modifier.height(32.dp))
-
-            Text(
-                text = "집중을 도와드릴게요.",
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.SemiBold
-                )
-            )
-            Spacer(Modifier.height(4.dp))
-            Text(
-                text = "어떤 앱들은 이 장소에서 집중을 방해할 수 있어요.",
-                style = MaterialTheme.typography.bodySmall,
-                color = Color(0xFF8E8E93),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
-
-            Spacer(Modifier.height(24.dp))
-
-            //todo. 앱 토글 임시로 그림만 그려놓음
-            AppToggleRow(
-                name = "Instagram",
-                gradientColors = listOf(
-                    Color(0xFFFFC36B),
-                    Color(0xFFE1306C)
-                ),
-                enabled = instagram,
-                onEnabledChange = { instagram = it }
-            )
-
-            AppToggleRow(
-                name = "Twitter",
-                solidColor = Color(0xFF1DA1F2),
-                enabled = twitter,
-                onEnabledChange = { twitter = it }
-            )
-
-            AppToggleRow(
-                name = "YouTube",
-                solidColor = Color(0xFFFF0000),
-                enabled = youtube,
-                onEnabledChange = { youtube = it }
-            )
-            AppToggleRow(
-                name = "Instagram",
-                gradientColors = listOf(
-                    Color(0xFFFFC36B),
-                    Color(0xFFE1306C)
-                ),
-                enabled = instagram,
-                onEnabledChange = { instagram = it }
-            )
-
-            AppToggleRow(
-                name = "Twitter",
-                solidColor = Color(0xFF1DA1F2),
-                enabled = twitter,
-                onEnabledChange = { twitter = it }
-            )
-
-            AppToggleRow(
-                name = "YouTube",
-                solidColor = Color(0xFFFF0000),
-                enabled = youtube,
-                onEnabledChange = { youtube = it }
-            )
-
+//            AppList()
             Spacer(Modifier.height(80.dp))
-
         }
     }
 

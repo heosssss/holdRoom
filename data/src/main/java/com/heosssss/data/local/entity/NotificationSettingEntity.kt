@@ -5,12 +5,12 @@ import androidx.room.PrimaryKey
 
 
 //DB 구조 생성
-@Entity(tableName = "notification_settings")
+@Entity(tableName = "time_alarms")
 data class NotificationSettingEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
 
-    val timeName: String,
+    val title: String,
     val startHour: Int,
     val startMinute: Int,
     val endHour: Int,
@@ -20,5 +20,5 @@ data class NotificationSettingEntity(
     val repeatType: String,
     val days: String,
 
-    val enabled: Boolean,
+    val isActive: Boolean,
 )

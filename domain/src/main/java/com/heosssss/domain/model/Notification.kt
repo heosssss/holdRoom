@@ -5,19 +5,22 @@ package com.heosssss.domain.model
 // 알림이란 무엇인가
 data class Notification(
     val id: Long = 0L,
-    val timeName: String,
+    val title: String,
     val startTime: Time,
     val endTime: Time,
     val blockedApps: List<String>,
     val repeatType: RepeatType,
     val days: Set<DayOfWeek>,
-    val enabled: Boolean,
+    val isActive: Boolean,
 )
 
 data class Time(
     val hour: Int,
     val minute: Int,
-)
+){
+    @Suppress("DefaultLocale")
+    fun toDisplayString(): String = String.format("%02d:%02d", hour, minute)
+}
 
 enum class RepeatType {
     DAILY, WEEKLY, WEEkEND, NONE

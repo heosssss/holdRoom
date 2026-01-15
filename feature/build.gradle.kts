@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.ksp) // kapt 대신 ksp 사용 권장
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -27,6 +27,7 @@ android {
             )
         }
     }
+
     buildFeatures {
         compose = true
     }
@@ -37,31 +38,31 @@ android {
     }
 }
 
-kotlin{
+kotlin {
     jvmToolchain(21)
 }
 
 dependencies {
+    // 1. 내부 모듈 (Internal Modules)
     implementation(project(":core-ui"))
     implementation(project(":domain"))
 
+    // 2. 제트팩 컴포즈 (BOM & Bundle)
+    // bundle에 navigation, ui, foundation 등이 포함되어 있어 중복 코드를 제거했습니다.
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose.libraries)
 
+    // 3. AndroidX & 이미지 로딩
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.ui)
-    implementation(libs.androidx.compose.foundation)
+    implementation(libs.coil.compose)
 
-//    XML+View 시스템용 라이브러리라서 필요하면 넣기
-//    implementation(libs.androidx.appcompat)
-//    implementation(libs.material)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
-
+    // 4. 의존성 주입 (Hilt)
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler) // kapt 대신 ksp 사용 (toml에 맞게)
+    ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // 5. 테스트 관련 (Bundle 활용)
+    testImplementation(libs.bundles.test.libraries)
+    androidTestImplementation(libs.bundles.android.test.libraries)
 }

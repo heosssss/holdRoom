@@ -1,5 +1,6 @@
-package com.heosssss.core_ui.component
+package com.heosssss.feature.notification.ui.component
 
+import android.graphics.drawable.Drawable
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
@@ -18,18 +20,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 @Composable
 fun AppToggleRow(
     name: String,
-    gradientColors: List<Color>? = null,
-    solidColor: Color? = null,
+    icon: Drawable?,
     enabled: Boolean,
     onEnabledChange: (Boolean) -> Unit
 ){
@@ -39,35 +45,17 @@ fun AppToggleRow(
             .padding(vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // 아이콘 동그라미
-        Surface(
-            modifier = Modifier.size(40.dp),
-            shape = CircleShape,
-            color = Color.Transparent
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .then(
-                        if (gradientColors != null) {
-                            Modifier
-                                .background(
-                                    brush = Brush.linearGradient(gradientColors)
-                                )
-                        } else {
-                            Modifier.background(solidColor ?: Color.LightGray)
-                        }
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = name.first().toString(),
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
-        }
+        // AppToggleRow 내부 아이콘 부분
+        AsyncImage(
+            model = icon, // 여기서 icon은 Drawable 객체입니다.
+            contentDescription = "$name 아이콘",
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(8.dp)),
+            // todo.아이콘이 로드되는 동안 보여줄 플레이스홀더 (선택)
+            placeholder = null,
+            error =null
+        )
 
         Spacer(Modifier.width(12.dp))
 

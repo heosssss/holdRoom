@@ -8,7 +8,8 @@ import com.heosssss.data.local.entity.NotificationSettingEntity
 
 @Database(
     entities = [NotificationSettingEntity::class],
-    version = 1
+    version = 1,
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase(){
 

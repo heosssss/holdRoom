@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.ksp) // kapt 대신 ksp 사용 권장
-    alias(libs.plugins.hilt) // Hilt 플러그인 적용
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -31,55 +31,50 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
+
     buildFeatures {
         compose = true
     }
 }
 
-kotlin{
+kotlin {
     jvmToolchain(21)
 }
 
 dependencies {
+    // 1. 내부 모듈 (Internal Modules)
     implementation(project(":feature"))
     implementation(project(":core-ui"))
     implementation(project(":data"))
 
+    // 2. 제트팩 컴포즈 (BOM & Bundle)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose.libraries)
 
+    // 3. AndroidX 핵심 라이브러리
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-//    implementation(libs.androidx.activity.compose)
-//    implementation(platform(libs.androidx.compose.bom))
-//    implementation(libs.androidx.compose.ui)
-//    implementation(libs.androidx.compose.ui.graphics)
-//    implementation(libs.androidx.compose.ui.tooling.preview)
-//    implementation(libs.androidx.compose.material3)
-//    implementation(libs.androidx.navigation.compose)
-
-    // Serialization (Route 등에 @Serializable 쓰면)
-//    implementation(libs.kotlinx.serialization.json)
-
-    // Hilt core
+    // 4. 의존성 주입 (Hilt)
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler) // kapt 대신 ksp 사용 (toml에 맞게)
+    ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
+    // 5. 직렬화 (Serialization)
+    implementation(libs.kotlinx.serialization.json)
 
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // 6. 테스트 관련
+    testImplementation(libs.bundles.test.libraries)
     androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation(libs.bundles.android.test.libraries)
+
+    // 7. 디버그 도구 (개발용 툴, 배포판에는 포함 안 됨)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 }

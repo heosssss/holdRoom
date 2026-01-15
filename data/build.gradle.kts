@@ -3,8 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.kotlin.parcelize)
-    alias(libs.plugins.ksp) // kapt 대신 ksp 사용 권장
-    alias(libs.plugins.hilt) // Hilt 플러그인 적용
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.hilt)
 }
 
 android {
@@ -27,39 +27,38 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
     }
 }
-kotlin{
+
+kotlin {
     jvmToolchain(21)
 }
 
 dependencies {
+    // 1. 내부 모듈 (Data는 오직 Domain만 의존합니다)
     implementation(project(":domain"))
 
+    // 2. AndroidX 핵심
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
 
-    // Room
-    implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.room.ktx)
+    // 3. 로컬 데이터베이스 (Room Bundle 활용)
+    implementation(libs.bundles.room.libraries)
     ksp(libs.androidx.room.compiler)
 
-    //Hilt
+    // 4. 의존성 주입 (Hilt)
+    // data 모듈은 ViewModel이 없으므로 hilt-navigation-compose는 삭제해도 무방합니다.
     implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler) // kapt 대신 ksp 사용 (toml에 맞게)
-    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
 
-    // 직렬화 (API/로컬 변환에 @Serializable 쓸 거면)
-//    implementation(libs.kotlinx.serialization.json)
+    // 5. 비동기 및 직렬화
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.serialization.json)
 
-    // 코루틴 (suspend, Flow 쓸 거면)
-//    implementation(libs.kotlinx.coroutines.core)
-
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    // 6. 테스트 관련 (Bundle 활용)
+    testImplementation(libs.bundles.test.libraries)
+    androidTestImplementation(libs.bundles.android.test.libraries)
 }

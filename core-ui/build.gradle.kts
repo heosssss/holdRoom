@@ -38,10 +38,15 @@ kotlin {
 }
 
 dependencies {
+    // 1. 제트팩 컴포즈 (BOM & Bundle)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.bundles.compose.libraries)
 
+    // 2. AndroidX 핵심
     implementation(libs.androidx.core.ktx)
 
+    // 3. 테스트 및 디버그
+    // 공통 컴포넌트의 Preview를 확인하기 위해 필요합니다.
+    testImplementation(libs.bundles.test.libraries)
     debugImplementation(libs.androidx.compose.ui.tooling)
 }
