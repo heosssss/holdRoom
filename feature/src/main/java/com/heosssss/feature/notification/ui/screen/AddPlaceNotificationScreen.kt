@@ -33,10 +33,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.heosssss.core_ui.component.BottomActionButton
-import com.heosssss.feature.notification.ui.component.AppList
+import com.heosssss.feature.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,7 +67,7 @@ fun AddPlaceNotification(
         },
         bottomBar = {
             BottomActionButton(
-                text = "이렇게 할래요",
+                text = stringResource(R.string.notif_btn_save),
                 onClick = {/*todo*/},
                 containerColor = Color(0xFF9B8CFF),
                 contentColor = Color.White
@@ -81,14 +82,14 @@ fun AddPlaceNotification(
                 .padding(horizontal = 20.dp, vertical = 8.dp)
         ) {
             Text(
-                text = "어디인가요?",
+                text = stringResource(R.string.notif_title_ask_place),
                 style = MaterialTheme.typography.headlineSmall.copy(
                     fontWeight = FontWeight.Bold
                 ),
                 modifier = Modifier.padding(bottom = 24.dp)
             )
             Text(
-                text = "장소 이름",
+                text = stringResource(R.string.notif_title_place),
                 style = MaterialTheme.typography.labelMedium,
                 color = Color.Gray
             )
@@ -99,7 +100,7 @@ fun AddPlaceNotification(
                 onValueChange = {placeName = it},
                 modifier = Modifier.fillMaxWidth(),
                 placeholder = {
-                    Text(text = "예: 집, 회사, 학교")
+                    Text(text = stringResource(R.string.notif_placeholder_title_place))
                 },
                 singleLine = true,
                 shape = RoundedCornerShape(16.dp)
@@ -108,7 +109,7 @@ fun AddPlaceNotification(
             Spacer(Modifier.height(24.dp))
 
             Text(
-                text = "장소",
+                text = stringResource(R.string.notif_place),
                 style = MaterialTheme.typography.labelMedium,
                 color = Color.Gray
             )
@@ -141,7 +142,7 @@ fun AddPlaceNotification(
                         Spacer(Modifier.width(12.dp))
 
                         Text(
-                            text = "지도에서 선택하기",
+                            text = stringResource(R.string.notif_btn_select_on_map),
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 fontWeight = FontWeight.SemiBold
                             )

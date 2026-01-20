@@ -4,17 +4,17 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddReaction
 import androidx.compose.material.icons.outlined.Notifications
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Timer
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -35,10 +35,6 @@ fun BottomNavigationBar(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-        /*
-        todo. 패딩 줄껀지 말껄지 ? 고민고민~
-        .padding(bottom = 10.dp, start = 10.dp, end = 10.dp)
-        */
     ) {
 
         Column (
@@ -46,15 +42,12 @@ fun BottomNavigationBar(
                 .shadow(
                     elevation = 6.dp,
                     shape = RoundedCornerShape(28.dp),
-                    spotColor = Color(0x22000000)
                 )
                 .clip(RoundedCornerShape(28.dp))
                 .background(Color.White)
         ){
             NavigationBar(
                 containerColor = Color.Transparent,
-                contentColor = Color.Black,
-                tonalElevation = 0.dp
             ) {
                 // 선택된 route를 가져오기
                 val navBackStackEntry by navController.currentBackStackEntryAsState() // 현재 네비게이션 백스택의 top을 state로 가져옴 by로 위임함
@@ -92,8 +85,15 @@ fun BottomNavigationBar(
                                     Screen.Profile -> "프로필"
                                 }
                             )
-                        }
+                        },
+                        colors = NavigationBarItemDefaults.colors(
+                            selectedIconColor = MaterialTheme.colorScheme.primary,
+                            selectedTextColor = MaterialTheme.colorScheme.primary,
+                            indicatorColor = Color.Transparent,
 
+                            unselectedIconColor = MaterialTheme.colorScheme.outlineVariant,
+                            unselectedTextColor = MaterialTheme.colorScheme.outlineVariant,
+                        )
                     )
                 }
             }

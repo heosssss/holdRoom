@@ -27,5 +27,11 @@ enum class RepeatType {
 }
 
 enum class DayOfWeek {
-    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY
+    MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY;
+
+    companion object {
+        val weekdayEntries = setOf(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY)
+        val weekendEntries = setOf(SATURDAY, SUNDAY)
+    }
 }
+

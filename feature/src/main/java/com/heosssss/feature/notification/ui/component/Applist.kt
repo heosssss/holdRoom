@@ -8,8 +8,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.heosssss.feature.R
 import com.heosssss.feature.notification.model.AppInfoUiModel
 
 
@@ -42,9 +43,9 @@ fun EmptyAppList() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "설치된 앱이 없습니다.",
+            text = stringResource(R.string.notif_empty_app_list),
             style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.outlineVariant
         )
     }
 }

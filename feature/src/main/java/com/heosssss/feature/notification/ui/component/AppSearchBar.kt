@@ -8,13 +8,15 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.heosssss.feature.R
 
 @Composable
 fun AppSearchBar(
@@ -28,7 +30,7 @@ fun AppSearchBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        placeholder = { Text("앱 이름으로 검색") },
+        placeholder = { Text(stringResource(R.string.notif_app_search)) },
         leadingIcon = { Icon(Icons.Default.Search, contentDescription = null) },
         trailingIcon = {
             if (query.isNotEmpty()) {
@@ -40,8 +42,8 @@ fun AppSearchBar(
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = Color(0xFFB39DDB),
-            unfocusedBorderColor = Color(0xFFE0E0E0)
+            focusedBorderColor = MaterialTheme.colorScheme.outline,
+            unfocusedBorderColor = MaterialTheme.colorScheme.onSurfaceVariant
         )
     )
 }

@@ -27,7 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,11 +37,14 @@ import com.heosssss.core_ui.component.DayChip
 import com.heosssss.core_ui.component.RepeatChip
 import com.heosssss.core_ui.component.TimeField
 import com.heosssss.core_ui.component.TimePickerDialog
+import com.heosssss.domain.model.DayOfWeek
 import com.heosssss.domain.model.RepeatType
 import com.heosssss.domain.model.Time
+import com.heosssss.feature.R
 import com.heosssss.feature.notification.model.AppInfoUiModel
 import com.heosssss.feature.notification.ui.component.AppList
 import com.heosssss.feature.notification.ui.component.AppSearchBar
+import com.heosssss.feature.notification.util.toResId
 import com.heosssss.feature.notification.viewmodel.AddTimeNotificationViewModel
 import com.heosssss.feature.notification.viewmodel.AppListViewModel
 
@@ -59,11 +62,12 @@ fun AddTimeNotification(
     val uiState by viewModel.uiState.collectAsState()
     val appListUiState by appListViewModel.uiState.collectAsState()
 
-    //시작 시간 다이얼로그
-    if (uiState.showStartPicker) {
+    val currentState = uiState
+
+    if (currentState.showStartPicker && currentState.startTime != null) {
         TimePickerDialog(
-            initialHour = uiState.startTime.hour,
-            initialMinute = uiState.startTime.minute,
+            initialHour = currentState.startTime.hour,
+            initialMinute = currentState.startTime.minute,
             onDismiss = { viewModel.onShowStartPicker(false) },
             onConfirm = { h, m ->
                 viewModel.onStartTimeChanged(Time(h, m))
@@ -71,11 +75,11 @@ fun AddTimeNotification(
             }
         )
     }
-    //종료 시간 다이얼로그
-    if (uiState.showEndPicker) {
+
+    if (currentState.showEndPicker && currentState.endTime != null) {
         TimePickerDialog(
-            initialHour = uiState.endTime.hour,
-            initialMinute = uiState.endTime.minute,
+            initialHour = currentState.endTime.hour,
+            initialMinute = currentState.endTime.minute,
             onDismiss = { viewModel.onShowEndPicker(false) },
             onConfirm = { h, m ->
                 viewModel.onEndTimeChanged(Time(h, m))
@@ -99,10 +103,10 @@ fun AddTimeNotification(
         },
         bottomBar = {
             BottomActionButton(
-                text = "이렇게 할래요",
-                onClick = { viewModel.saveNotificaion() },
-                containerColor = Color(0xFF9B8CFF),
-                contentColor = Color.White
+                text = stringResource(R.string.notif_btn_save),
+                onClick = { viewModel.saveNotificaion(appListUiState.selectedApps.toList()) },
+                containerColor = MaterialTheme.colorScheme.tertiary,
+                contentColor = MaterialTheme.colorScheme.surface,
             )
         },
     ) { innerPadding ->
@@ -120,8 +124,8 @@ fun AddTimeNotification(
             }
             item {
                 TimeSettingSection(
-                    startTime = uiState.startTime,
-                    endTime = uiState.endTime,
+                    startTime = uiState.startTime ?: Time(0, 0),
+                    endTime = uiState.endTime ?: Time(0, 0),
                     onStartClick = { viewModel.onShowStartPicker(true) },
                     onEndClick = { viewModel.onShowEndPicker(true) }
                 )
@@ -136,12 +140,14 @@ fun AddTimeNotification(
                 )
             }
             item {
-                RepeatSelectionSection(
-                    repeatMode = uiState.repeatType,
-                    selectedDays = uiState.selectedDaysString, // 요일 처리는 ViewModel에서!
-                    onModeClick = { mode, days -> viewModel.onRepeatModeChanged(mode) },
-                    onDayClick = { day -> viewModel.onDaySelected(day) }
-                )
+                if (currentState.repeatType != null) {
+                    RepeatSelectionSection(
+                        repeatMode = currentState.repeatType, // Smart Cast로 인해 Non-null로 인식
+                        selectedDays = currentState.selectedDays,
+                        onModeClick = { mode, days -> viewModel.onRepeatModeChanged(mode, days) },
+                        onDayClick = { day -> viewModel.onDaySelected(day) }
+                    )
+                }
             }
         }
     }
@@ -156,17 +162,20 @@ private fun NameSection(
 ) {
     Column {
         Text(
-            text = "무슨 시간이에요?",
+            text = stringResource(R.string.notif_title_ask_time),
             style = MaterialTheme.typography.headlineSmall.copy(fontWeight = FontWeight.Bold),
             modifier = Modifier.padding(bottom = 24.dp)
         )
-        Text(text = "시간 이름", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+        Text(
+            text = stringResource(R.string.notif_title_time),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.outlineVariant)
         Spacer(Modifier.height(8.dp))
         OutlinedTextField(
             value = title,
             onValueChange = onNameChange,
             modifier = Modifier.fillMaxWidth().height(52.dp),
-            placeholder = { Text(text = "예: 아침 집중, 자기 전에") },
+            placeholder = { Text(text = stringResource(R.string.notif_placeholder_title_time)) },
             singleLine = true,
             shape = RoundedCornerShape(16.dp)
         )
@@ -174,7 +183,6 @@ private fun NameSection(
     }
 }
 
-// 시간 설정 섹션 (시작/종료 시간)
 @Composable
 private fun TimeSettingSection(
     startTime: Time,
@@ -183,16 +191,27 @@ private fun TimeSettingSection(
     onEndClick: () -> Unit
 ) {
     Column {
-        Text(text = "시간 설정", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+        Text(
+            text = stringResource(R.string.notif_time_setting),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
         Spacer(Modifier.height(12.dp))
-        Text(text = "시작 시간", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+        Text(
+            text = stringResource(R.string.notif_time_start),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
         Spacer(Modifier.height(6.dp))
         TimeField(
             time = startTime.toDisplayString(),
             onClick = onStartClick
         )
         Spacer(Modifier.height(16.dp))
-        Text(text = "종료 시간", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+        Text(
+            stringResource(R.string.notif_time_end),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.outlineVariant)
         Spacer(Modifier.height(6.dp))
         TimeField(
             time = endTime.toDisplayString(),
@@ -205,21 +224,21 @@ private fun TimeSettingSection(
 @Composable
 private fun AppSelectionSection(
     query: String,
-    apps: List<AppInfoUiModel>, // AppListViewModel에서 가져온 데이터
+    apps: List<AppInfoUiModel>,
     selectedApps: Set<String>,
     onQueryChange: (String) -> Unit,
     onAppToggle: (String) -> Unit
 ) {
     Column {
         Text(
-            text = "집중을 도와드릴게요.",
+            text = stringResource(R.string.notif_help_focus),
             style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
         )
         Spacer(Modifier.height(4.dp))
         Text(
-            text = "어떤 앱들은 집중을 방해할 수 있어요.",
+            text = stringResource(R.string.notif_app_block),
             style = MaterialTheme.typography.bodySmall,
-            color = Color(0xFF8E8E93),
+            color = MaterialTheme.colorScheme.outlineVariant,
             maxLines = 2,
             overflow = TextOverflow.Ellipsis
         )
@@ -240,12 +259,16 @@ private fun AppSelectionSection(
 @Composable
 private fun RepeatSelectionSection(
     repeatMode: RepeatType,
-    selectedDays: Set<String>,
-    onModeClick: (RepeatType, Set<String>) -> Unit,
-    onDayClick: (String) -> Unit
+    selectedDays: Set<DayOfWeek>,
+    onModeClick: (RepeatType, Set<DayOfWeek>) -> Unit,
+    onDayClick: (DayOfWeek) -> Unit
 ) {
     Column {
-        Text(text = "반복할까요?", style = MaterialTheme.typography.labelMedium, color = Color.Gray)
+        Text(
+            text =stringResource(R.string.notif_repeat),
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.outlineVariant
+        )
         Spacer(Modifier.height(12.dp))
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
@@ -254,28 +277,31 @@ private fun RepeatSelectionSection(
             RepeatChip(
                 text = "주중",
                 selected = repeatMode == RepeatType.WEEKLY,
-                onClick = { onModeClick(RepeatType.WEEKLY, setOf("월", "화", "수", "목", "금")) }
+                onClick = {
+                    onModeClick(RepeatType.WEEKLY, setOf(DayOfWeek.MONDAY, DayOfWeek.TUESDAY, DayOfWeek.WEDNESDAY, DayOfWeek.THURSDAY, DayOfWeek.FRIDAY))
+                }
             )
             RepeatChip(
                 text = "주말",
                 selected = repeatMode == RepeatType.WEEkEND,
-                onClick = { onModeClick(RepeatType.WEEkEND, setOf("토", "일")) }
+                onClick = {
+                    onModeClick(RepeatType.WEEkEND, setOf(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)) }
             )
             RepeatChip(
                 text = "매일",
-                selected = repeatMode == RepeatType.DAILY, // RepeatType에 DAILY가 있다고 가정
-                onClick = { onModeClick(RepeatType.DAILY, setOf("월", "화", "수", "목", "금", "토", "일")) }
+                selected = repeatMode == RepeatType.DAILY,
+                onClick = { onModeClick(RepeatType.DAILY, DayOfWeek.entries.toSet())}
             )
         }
         Spacer(Modifier.height(16.dp))
-        val days = listOf("월", "화", "수", "목", "금", "토", "일")
+        val days = DayOfWeek.entries
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
             days.forEach { day ->
                 DayChip(
-                    text = day,
+                    text = stringResource(id = day.toResId()),
                     selected = selectedDays.contains(day),
                     onClick = { onDayClick(day) }
                 )

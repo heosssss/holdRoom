@@ -5,9 +5,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.heosssss.core_ui.component.AddFloatingButton
 import com.heosssss.core_ui.component.AppScreenScaffold
+import com.heosssss.feature.R
 import com.heosssss.feature.notification.model.NotificationTab
 import com.heosssss.feature.notification.ui.component.NotificationTab
 import com.heosssss.feature.notification.viewmodel.NotificationViewModel
@@ -21,7 +23,7 @@ fun NotificationScreen(
     val selectedTab = viewModel.selectedTab
 
     AppScreenScaffold(
-        title = "알림",
+        title = stringResource(R.string.notif),
         floatingActionButton = {
             AddFloatingButton(
                 onClick = {
