@@ -6,11 +6,12 @@ import kotlinx.serialization.Serializable
 object NotificationMain
 
 @Serializable
-object AddTimeNotification
+data class AddTimeNotification(
+    val id: Long? = null
+)
 
 @Serializable
 object AddPlaceNotification
-
 @Serializable
 data class SelectPlace(
     val selectedAddress: String? = null

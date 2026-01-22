@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 //DB 구조 생성
 @Entity(tableName = "time_alarms")
-data class NotificationSettingEntity(
+data class NotificationTimeAlarmsEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
 

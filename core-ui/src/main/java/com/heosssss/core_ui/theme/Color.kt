@@ -8,7 +8,10 @@ val Pink80 = Color(0xFFEFB8C8)
 val Purple600 = Color(0xFF9D4EDD)
 val Purple700 = Color(0xFF7A2CD9)
 val LavenderBlue = Color(0xFF9B8CFF)
-
-val White = Color.White
+val CoolWhite = Color(0xFFF5F5F7)
 val Gray500 = Color(0xFF8E8E93)
 val Gray300 = Color(0xFFE0E0E0)
+
+val DarkGray = Color(0xFF424242)
+
+

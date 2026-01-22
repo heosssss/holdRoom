@@ -65,6 +65,10 @@ class AppListViewModel @Inject constructor(
         }
     }
 
+    fun setSelectedApps(appPackageNames: Set<String>) {
+        _selectedApps.value = appPackageNames.toSet()
+    }
+
     //내부 로직
     private fun loadInstalledApps(){
         viewModelScope.launch {

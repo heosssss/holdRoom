@@ -3,7 +3,7 @@ package com.heosssss.domain.model
 
 // domian 모듈에는 규칙 + 의미만 있음.
 // 알림이란 무엇인가
-data class Notification(
+data class TimeNotification(
     val id: Long = 0L,
     val title: String,
     val startTime: Time,
@@ -20,6 +20,17 @@ data class Time(
 ){
     @Suppress("DefaultLocale")
     fun toDisplayString(): String = String.format("%02d:%02d", hour, minute)
+
+    @Suppress("DefaultLocale")
+    fun toAmPmString(): String {
+        val amPm = if (hour < 12) "am" else "pm"
+        val displayHour = when {
+            hour == 0 -> 12
+            hour > 12 -> hour - 12
+            else -> hour
+        }
+        return String.format("%02d:%02d%s", displayHour, minute, amPm)
+    }
 }
 
 enum class RepeatType {

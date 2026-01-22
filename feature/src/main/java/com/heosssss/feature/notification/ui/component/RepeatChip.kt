@@ -1,6 +1,8 @@
-package com.heosssss.core_ui.component
+package com.heosssss.feature.notification.ui.component
 
+import android.content.res.Configuration
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.heosssss.core_ui.theme.HoldRoomTheme
 
 @Composable
 fun RepeatChip(
@@ -24,14 +27,15 @@ fun RepeatChip(
     selected: Boolean,
     onClick: () -> Unit,
 ){
-    val selectedColor = Color(0xFFB39DDB)
-    val bgSelected = Color(0xFFEDE7F6)
-    val bgDefault = Color(0xFFF5F5F7)
+    val selectedColor = MaterialTheme.colorScheme.outline
+    val bgDefault = MaterialTheme.colorScheme.surface
+    val borderColor = MaterialTheme.colorScheme.onSurfaceVariant
+    val textColor = MaterialTheme.colorScheme.onSurface
 
     Surface(
         shape = RoundedCornerShape(10.dp),
         color = if (selected) selectedColor else bgDefault,
-        border = if(selected) null else BorderStroke(1.dp, Color(0xFFE0E0E0)),
+        border = if(selected) null else BorderStroke(1.dp, borderColor),
         onClick = onClick,
         modifier = Modifier
             .height(48.dp)
@@ -45,35 +49,38 @@ fun RepeatChip(
             Text(
                 text = text,
                 style = MaterialTheme.typography.labelMedium,
-                color = if(selected) Color.White else Color(0xFF424242),
+                color = if(selected) bgDefault else textColor,
             )
         }
 
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_NO)
 @Composable
 fun RepeatChipPreview() {
-    Column(
-        modifier = Modifier
-            .padding(16.dp)
-    ) {
-        Text("선택 안 된 칩")
-        RepeatChip(
-            text = "주중",
-            selected = false,
-            onClick = {}
-        )
+    HoldRoomTheme {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+        ) {
+            Text("선택 안 된 칩")
+            RepeatChip(
+                text = "주중",
+                selected = false,
+                onClick = {}
+            )
 
-        Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(16.dp))
 
-        Text("선택된 칩")
-        RepeatChip(
-            text = "매일",
-            selected = true,
-            onClick = {}
-        )
+            Text("선택된 칩")
+            RepeatChip(
+                text = "매일",
+                selected = true,
+                onClick = {}
+            )
+        }
     }
 }
 

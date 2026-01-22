@@ -1,6 +1,6 @@
 package com.heosssss.domain.usecase
 
-import com.heosssss.domain.model.Notification
+import com.heosssss.domain.model.TimeNotification
 import com.heosssss.domain.repository.NotificationRepository
 import javax.inject.Inject
 
@@ -9,7 +9,7 @@ import javax.inject.Inject
 class SaveNotificationUseCase @Inject constructor(
     private val repository : NotificationRepository
 ){
-    suspend operator fun invoke(notificationSetting: Notification){
-        repository.save(notificationSetting)
+    suspend operator fun invoke(notificationSetting: TimeNotification){
+        repository.notiTimeSave(notificationSetting)
     }
 }

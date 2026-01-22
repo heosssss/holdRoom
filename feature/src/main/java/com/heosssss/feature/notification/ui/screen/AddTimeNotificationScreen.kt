@@ -21,11 +21,15 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -34,7 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.heosssss.core_ui.component.BottomActionButton
 import com.heosssss.core_ui.component.DayChip
-import com.heosssss.core_ui.component.RepeatChip
+import com.heosssss.feature.notification.ui.component.RepeatChip
 import com.heosssss.core_ui.component.TimeField
 import com.heosssss.core_ui.component.TimePickerDialog
 import com.heosssss.domain.model.DayOfWeek
@@ -53,9 +57,11 @@ import com.heosssss.feature.notification.viewmodel.AppListViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTimeNotification(
+//    notificationId: Long? = null,
     onBackClick: () -> Unit = {},
     viewModel: AddTimeNotificationViewModel = hiltViewModel(),
-    appListViewModel: AppListViewModel = hiltViewModel()
+    appListViewModel: AppListViewModel = hiltViewModel(),
+    onNavigateBack: () -> Unit // 이전 화면 이동용 콜백
     ) {
 
     //ViewModel들로부터 상태 수집
@@ -63,6 +69,21 @@ fun AddTimeNotification(
     val appListUiState by appListViewModel.uiState.collectAsState()
 
     val currentState = uiState
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(uiState.blockedApps) {
+        if (uiState.blockedApps.isNotEmpty()) {
+            appListViewModel.setSelectedApps(uiState.blockedApps)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.saveSuccessEvent.collect {
+            snackbarHostState.showSnackbar("저장되었습니다.")
+            onNavigateBack()
+        }
+    }
 
     if (currentState.showStartPicker && currentState.startTime != null) {
         TimePickerDialog(
@@ -109,6 +130,7 @@ fun AddTimeNotification(
                 contentColor = MaterialTheme.colorScheme.surface,
             )
         },
+        snackbarHost = { SnackbarHost(snackbarHostState) },
     ) { innerPadding ->
         LazyColumn(
             modifier = Modifier

@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.heosssss.feature.notification.ui.screen.AddPlaceNotification
 import com.heosssss.feature.notification.ui.screen.AddTimeNotification
 import com.heosssss.feature.notification.ui.screen.NotificationScreen
@@ -17,16 +18,19 @@ fun NavGraphBuilder.notificationNavGraph(
     ){
         composable<NotificationMain> {
             NotificationScreen(
-                onNavigateToAddTimeRule = { navController.navigate(AddTimeNotification)},
+                navController = navController,
+                onNavigateToAddTimeRule = { navController.navigate(AddTimeNotification())},
                 onNavigateToAddPlaceRule = { navController.navigate(AddPlaceNotification)}
             )
         }
 
-        composable<AddTimeNotification> {
+        composable<AddTimeNotification> { backStackEntry ->
             AddTimeNotification(
-                onBackClick = { navController.popBackStack() }
+                onBackClick = { navController.popBackStack() },
+                onNavigateBack = { navController.popBackStack() }
             )
         }
+
         composable<AddPlaceNotification> {
             AddPlaceNotification(
                 onBackClick = { navController.popBackStack() },

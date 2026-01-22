@@ -2,17 +2,23 @@ package com.heosssss.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
-import com.heosssss.data.local.entity.NotificationSettingEntity
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import com.heosssss.data.local.entity.NotificationTimeAlarmsEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface NotificationDAO {
 
-    @Insert
-    suspend fun insertNotificationSetting(notificationSetting: NotificationSettingEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNotificationSetting(notificationSetting: NotificationTimeAlarmsEntity)
 
-//    @Query("SELECT * FROM notificationSetting")
-//    suspend fun getAllNotificationSettings(): List<NotificationSettingEntity>
-//
+    @Query("SELECT * FROM time_alarms")
+    fun getAllNotificationTimeSettings(): Flow<List<NotificationTimeAlarmsEntity>>
+
+    @Query("SELECT * FROM time_alarms WHERE id = :id")
+    suspend fun getNotificationById(id: Long): NotificationTimeAlarmsEntity
+
 //    @Query("DELETE FROM notificationSetting WHERE id = :id")
 //    suspend fun deleteNotificationSetting(id: Int)
 

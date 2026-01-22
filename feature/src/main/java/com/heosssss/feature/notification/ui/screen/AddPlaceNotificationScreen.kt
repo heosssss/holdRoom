@@ -62,7 +62,6 @@ fun AddPlaceNotification(
                         )
                     }
                 },
-//                windowInsets = WindowInsets(0.dp)
             )
         },
         bottomBar = {

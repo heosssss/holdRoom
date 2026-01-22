@@ -3,11 +3,11 @@ package com.heosssss.data.local.db
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.heosssss.data.local.dao.NotificationDAO
-import com.heosssss.data.local.entity.NotificationSettingEntity
+import com.heosssss.data.local.entity.NotificationTimeAlarmsEntity
 
 
 @Database(
-    entities = [NotificationSettingEntity::class],
+    entities = [NotificationTimeAlarmsEntity::class],
     version = 1,
     exportSchema = false
 )
