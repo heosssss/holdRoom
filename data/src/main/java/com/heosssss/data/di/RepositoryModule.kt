@@ -1,8 +1,10 @@
 package com.heosssss.data.di
 
 import com.heosssss.data.repository.AppRepositoryImpl
+import com.heosssss.data.repository.NotificationPlaceRepositoryImpl
 import com.heosssss.data.repository.NotificationRepositoryImpl
 import com.heosssss.domain.repository.AppRepository
+import com.heosssss.domain.repository.NotificationPlaceRepository
 import com.heosssss.domain.repository.NotificationRepository
 import dagger.Binds
 import dagger.Module
@@ -24,6 +26,11 @@ abstract class RepositoryModule {
     abstract fun bindAppRepository(
         appRepositoryImpl: AppRepositoryImpl
     ): AppRepository
+
+    @Binds
+    abstract fun bindNotificationPlaceRepository(
+        notificationPlaceRepositoryImpl: NotificationPlaceRepositoryImpl
+    ): NotificationPlaceRepository
 
 
 }

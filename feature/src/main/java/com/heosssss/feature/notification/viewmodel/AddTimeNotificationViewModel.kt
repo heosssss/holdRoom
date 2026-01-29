@@ -76,7 +76,7 @@ class AddTimeNotificationViewModel @Inject constructor(
                 }
                 // TODO: AppListViewModel에 notification.blockedApps 정보를 전달하여 체크박스를 채워야 합니다.
             } catch (e: Exception) {
-                Log.e("ViewModel", "데이터 로드 실패: ${e.message}")
+                Log.e("TimeViewModel", "데이터 로드 실패: ${e.message}")
             }
         }
     }

@@ -3,6 +3,7 @@ package com.heosssss.data.di
 import android.content.Context
 import androidx.room.Room
 import com.heosssss.data.local.dao.NotificationDAO
+import com.heosssss.data.local.dao.NotificationPlaceDAO
 import com.heosssss.data.local.db.AppDatabase
 import dagger.Module
 import dagger.Provides
@@ -31,6 +32,13 @@ object DatabaseModule {
         db: AppDatabase
     ) : NotificationDAO =
         db.notificationSettingDao()
+
+    @Provides
+    fun provideNotificationPlaceSettingDao(
+        db: AppDatabase
+    ) : NotificationPlaceDAO =
+        db.notificationPlaceSettingDao()
+
 
 
 }

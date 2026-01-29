@@ -11,7 +11,10 @@ data class AddTimeNotification(
 )
 
 @Serializable
-object AddPlaceNotification
+data class AddPlaceNotification(
+    val id: Long? = null
+)
+
 @Serializable
 data class SelectPlace(
     val selectedAddress: String? = null

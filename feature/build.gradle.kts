@@ -65,4 +65,10 @@ dependencies {
     // 5. 테스트 관련 (Bundle 활용)
     testImplementation(libs.bundles.test.libraries)
     androidTestImplementation(libs.bundles.android.test.libraries)
+
+    // 네이버 지도
+    implementation(libs.naver.map.sdk)
+    implementation(libs.naver.map.compose){
+        exclude(group = "com.android.support", module = "support-compat")
+    }
 }

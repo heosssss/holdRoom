@@ -2,8 +2,8 @@ package com.heosssss.feature.notification.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.heosssss.domain.model.TimeNotification
-import com.heosssss.domain.repository.NotificationRepository
+import com.heosssss.domain.model.PlaceNotification
+import com.heosssss.domain.repository.NotificationPlaceRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.SharingStarted
@@ -14,10 +14,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class TimeNotificationContentViewModel  @Inject constructor(
-    private val repostitory: NotificationRepository
+class PlaceNotificationContentViewModel @Inject constructor(
+    private val repository: NotificationPlaceRepository
 ) : ViewModel(){
-    val timeNotificationlist: StateFlow<List<TimeNotification>> = repostitory.loadAllNotiTime()
+    val placeNotificationlist: StateFlow<List<PlaceNotification>> = repository.loadAllNotiPlace()
         .flowOn(Dispatchers.IO)
         .stateIn(
             scope = viewModelScope,
@@ -25,10 +25,10 @@ class TimeNotificationContentViewModel  @Inject constructor(
             initialValue = emptyList()
         )
 
-    fun onNotificationActiveChanged(notification: TimeNotification, isActive: Boolean){
+    fun onNotificationActiveChanged(notification: PlaceNotification, isActive: Boolean){
         viewModelScope.launch {
             val updatedNotification = notification.copy(isActive = isActive)
-            repostitory.saveNotiTime(updatedNotification)
+            repository.saveNotiPlace(updatedNotification)
         }
     }
 }

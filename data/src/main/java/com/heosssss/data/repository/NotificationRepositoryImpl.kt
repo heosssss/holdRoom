@@ -27,7 +27,7 @@ class NotificationRepositoryImpl @Inject constructor(
         )
     }
 
-    override suspend fun notiTimeSave(notificationSetting: TimeNotification) {
+    override suspend fun saveNotiTime(notificationSetting: TimeNotification) {
         dao.insertNotificationSetting(notificationSetting.toEntity())
     }
 

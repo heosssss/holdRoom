@@ -13,6 +13,7 @@ import com.heosssss.core_ui.component.AppScreenScaffold
 import com.heosssss.feature.R
 import com.heosssss.feature.notification.model.NotificationTab
 import com.heosssss.feature.notification.navigation.AddTimeNotification
+import com.heosssss.feature.notification.navigation.AddPlaceNotification
 import com.heosssss.feature.notification.ui.component.NotificationTab
 import com.heosssss.feature.notification.viewmodel.NotificationViewModel
 
@@ -55,7 +56,11 @@ fun NotificationScreen(
                         navController.navigate(AddTimeNotification(id = id))
                     }
                 )
-                NotificationTab.Place -> PlaceNotificationContent()
+                NotificationTab.Place -> PlaceNotificationContent(
+                    onItemClick = { id ->
+                        navController.navigate(AddPlaceNotification(id = id))
+                    }
+                )
             }
         } }
 }

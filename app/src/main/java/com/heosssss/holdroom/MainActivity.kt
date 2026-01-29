@@ -2,6 +2,7 @@ package com.heosssss.holdroom
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -31,6 +32,9 @@ class MainActivity : ComponentActivity() { // 앱이 실행될 때 맨 처음 �
                 Color.TRANSPARENT
             )
         )
+
+        // MainActivity.kt 또는 Application 클래스 등
+        Log.d("NaverMapDebug", "실제 패키지명: ${packageName}")
         setContent {
             HoldRoomTheme {
 //               Surface(color = MaterialTheme.colorScheme.background) { // material3 디자인의 "표면" 개념을 표현하는 컴포저블

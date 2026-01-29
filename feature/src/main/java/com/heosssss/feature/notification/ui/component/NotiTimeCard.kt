@@ -98,7 +98,7 @@ fun NotiTimeCard(
                     checkedThumbColor = MaterialTheme.colorScheme.surface,
                     checkedTrackColor = MaterialTheme.colorScheme.outline,
                     uncheckedThumbColor = MaterialTheme.colorScheme.surface,
-                    uncheckedTrackColor = MaterialTheme.colorScheme.outline,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.onSurfaceVariant,
                     uncheckedBorderColor = Color.Transparent
                 )
             )

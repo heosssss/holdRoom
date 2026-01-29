@@ -57,11 +57,10 @@ import com.heosssss.feature.notification.viewmodel.AppListViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTimeNotification(
-//    notificationId: Long? = null,
     onBackClick: () -> Unit = {},
+    onNavigateBack: () -> Unit, // 이전 화면 이동용 콜백
     viewModel: AddTimeNotificationViewModel = hiltViewModel(),
     appListViewModel: AppListViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit // 이전 화면 이동용 콜백
     ) {
 
     //ViewModel들로부터 상태 수집
@@ -196,7 +195,9 @@ private fun NameSection(
         OutlinedTextField(
             value = title,
             onValueChange = onNameChange,
-            modifier = Modifier.fillMaxWidth().height(52.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
             placeholder = { Text(text = stringResource(R.string.notif_placeholder_title_time)) },
             singleLine = true,
             shape = RoundedCornerShape(16.dp)

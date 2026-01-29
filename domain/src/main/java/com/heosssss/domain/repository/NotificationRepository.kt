@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 // domain 모듈은 아무것도 의존하지 않아!
 interface NotificationRepository {
     fun getDefaulConfig(): DefaultNotificationConfig
-    suspend fun notiTimeSave(notificationSetting: TimeNotification)
+    suspend fun saveNotiTime(notificationSetting: TimeNotification)
     fun loadAllNotiTime(): Flow<List<TimeNotification>>
     suspend fun getNotiTimeById(id: Long): TimeNotification
 }

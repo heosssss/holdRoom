@@ -10,6 +10,6 @@ class SaveNotificationUseCase @Inject constructor(
     private val repository : NotificationRepository
 ){
     suspend operator fun invoke(notificationSetting: TimeNotification){
-        repository.notiTimeSave(notificationSetting)
+        repository.saveNotiTime(notificationSetting)
     }
 }

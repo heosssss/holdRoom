@@ -20,20 +20,21 @@ fun NavGraphBuilder.notificationNavGraph(
             NotificationScreen(
                 navController = navController,
                 onNavigateToAddTimeRule = { navController.navigate(AddTimeNotification())},
-                onNavigateToAddPlaceRule = { navController.navigate(AddPlaceNotification)}
+                onNavigateToAddPlaceRule = { navController.navigate(AddPlaceNotification())}
             )
         }
 
         composable<AddTimeNotification> { backStackEntry ->
             AddTimeNotification(
                 onBackClick = { navController.popBackStack() },
-                onNavigateBack = { navController.popBackStack() }
+                onNavigateBack = { navController.popBackStack() },
             )
         }
 
         composable<AddPlaceNotification> {
             AddPlaceNotification(
                 onBackClick = { navController.popBackStack() },
+                onNavigateBack = { navController.popBackStack() },
                 onClickSelectOnMap = {
                     navController.navigate(SelectPlace())
                 }

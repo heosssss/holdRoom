@@ -14,4 +14,7 @@ val Gray300 = Color(0xFFE0E0E0)
 
 val DarkGray = Color(0xFF424242)
 
+val LightPurple = Color(0xFFF1EEF5)
+
+
 
